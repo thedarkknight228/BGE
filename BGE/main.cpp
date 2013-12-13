@@ -19,17 +19,20 @@
 #include "Lab7.h"
 #include "Lab8.h"
 #include "Buddha.h"
+#include "WinterWonderland.h"
 
 using namespace BGE;
 
 int main(int argc, char *argv[])
 {
 	
-	//Lab5 game;
+	//Lab6 game;
 
 	// Uncomment this line to run the Rift/Connect/Physics demo as per 
 	// http://www.youtube.com/watch?v=EEbVHxOkTxw
-	SteeringGame game;
+	WinterWonderland game;
+	//PhysicsGame1 game;
+
 	game.Run();
 
 	return 0;

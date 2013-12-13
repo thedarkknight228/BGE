@@ -7,7 +7,6 @@
 #include "Params.h"
 #include "FountainEffect.h"
 #include "Box.h"
-#include "SnowEffect.h"
 
 using namespace BGE;
 
@@ -20,7 +19,7 @@ SceneGraphGame::SceneGraphGame(void)
 	broadphase = NULL;
 	dispatcher = NULL;
 	solver = NULL;
-		
+	
 }
 
 SceneGraphGame::~SceneGraphGame(void)
@@ -57,7 +56,7 @@ bool SceneGraphGame::Initialise()
 	broadphase = new btAxisSweep3(worldMin,worldMax);
 	solver = new btSequentialImpulseConstraintSolver();
 	dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher,broadphase,solver,collisionConfiguration);
-	dynamicsWorld->setGravity(btVector3(0,0,0));
+	dynamicsWorld->setGravity(btVector3(0,-9,0));
 
 	camera->position = glm::vec3(0,10,0);
 	camera->look = glm::vec3(0, 0, 1);
@@ -67,10 +66,10 @@ bool SceneGraphGame::Initialise()
 	physicsFactory->CreateCameraPhysics();
 	physicsFactory->CreateGroundPhysics();
 
-	fullscreen = true;
-	riftEnabled = true;
-	width = 1280;
-	height = 800;
+	fullscreen = false;
+	riftEnabled = false;
+	width = 800;
+	height = 600;
 
 	shared_ptr<GameComponent> partFollower = make_shared<GameComponent>();
 	Attach(partFollower);
@@ -88,7 +87,7 @@ bool SceneGraphGame::Initialise()
 	station->worldMode = world_modes::from_self;
 	station->ambient = glm::vec3(0.2f, 0.2, 0.2f);
 	station->specular = glm::vec3(0,0,0);
-	station->scale = glm::vec3(1,5,1);
+	station->scale = glm::vec3(1,1,1);
 	std::shared_ptr<Model> cmodel = Content::LoadModel("coriolis", glm::rotate(glm::mat4(1), 90.0f, GameComponent::basisUp));	
 	station->Attach(cmodel);
 	station->Attach(make_shared<VectorDrawer>(glm::vec3(5,5,5)));
@@ -126,7 +125,7 @@ bool SceneGraphGame::Initialise()
 	Attach(ship3);
 
 	// Create some physics components using the factory
-	physicsFactory->CreateBox(5,5,5, NextPosition(current ++, componentCount), glm::quat());	
+	physicsFactory->CreateBox(5,5,5, NextPosition(current ++, componentCount), glm::quat(), glm::vec3(1,1,1));	
 	physicsFactory->CreateFromModel("monkey", NextPosition(current ++, componentCount), glm::quat(), glm::vec3(5,5,5));
 
 	// Create a physics car
@@ -178,13 +177,9 @@ bool SceneGraphGame::Initialise()
 		pathFollowerController->route->looped = true;
 	}
 	partFollower->Attach(pathFollowerController);
-	shared_ptr<FountainEffect> fountain = make_shared<FountainEffect>(1000);
-	partFollower->diffuse = glm::vec3(0,1,1);
+	shared_ptr<FountainEffect> fountain = make_shared<FountainEffect>(100);
 	fountain->worldMode = world_modes::from_parent;
-
-	shared_ptr<SnowEffect> snow = make_shared<SnowEffect>();
-	Attach(snow);
-
+	
 	partFollower->Attach(fountain);
 
 	return Game::Initialise();

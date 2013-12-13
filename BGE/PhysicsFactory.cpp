@@ -21,10 +21,247 @@ PhysicsFactory::~PhysicsFactory(void)
 {
 }
 
+/*void PhysicsFactory::BowlingPins(glm::vec3 startAt, float width, float depth, float blockHeight)
+{
+	float y = startAt.y;
+	float gap = 0;
+	float radius = 3.0f;
+
+	for (int w = 0 ; w < width ; w ++)
+	{
+		for (int h = 0 ; h < depth ; h ++)	
+		{
+			float x = startAt.x + ((blockWidth + 2) * w);
+			float z = ((blockHeight + gap) / 2.0f) + ((blockHeight + gap) * h);
+			CreateCylinder(radius, blockHeight, glm::vec3(x, y, z), glm::quat(), glm::vec3(1,0.5f,0.9f));
+		}
+	}
+}*/
+
+//************************************************************************************************************************************
+// This function takes in 2 parameters the position of the first snowman and then the amount of them that you require.
+// It goes around a for loop for each snowman being built, if the loop is on its second loop around or greater it adds to the 
+// position of the first snowman so it is placed beside the previous one.
+// Then each body part is created.
+// The nose it set to zero gravity so it doesn't fall and the rest are all kinematic objects.
+// Each shape being created takes in an extra parameter which is the colour you want it to be. 
+//************************************************************************************************************************************
+void PhysicsFactory::CreateSnowman(glm::vec3 Position, float Amount)
+{
+	for(int k = 0; k < Amount; k++)
+	{
+		if(k > 0)
+		{
+			Position.x = Position.x + 50;
+		}
+		shared_ptr<PhysicsController> BottomPart = Snowman(20, Position, glm::quat(), glm::vec3(239,208,207)); 
+		shared_ptr<PhysicsController> MiddlePart = Snowman(15, glm::vec3(Position.x, Position.y + 30, Position.z), glm::quat(), glm::vec3(239,208,207)); 
+		shared_ptr<PhysicsController> TopPart = Snowman(8, glm::vec3(Position.x, Position.y + 50, Position.z), glm::quat(), glm::vec3(239,208,207));
+		shared_ptr<PhysicsController> eyeleft = CreateBoundryWall(1,1,1, glm::vec3(Position.x - 3, Position.y + 53, Position.z + 10), glm::quat()); 
+		shared_ptr<PhysicsController> eyeright = CreateBoundryWall(1,1,1, glm::vec3(Position.x + 3, Position.y + 53, Position.z + 10), glm::quat());
+		shared_ptr<PhysicsController> Nose = CreateBox(1,1,6, glm::vec3(Position.x, Position.y + 50, Position.z + 5), glm::quat(), glm::vec3(0.9f,0.4f,0));
+		shared_ptr<PhysicsController> button1 = CreateBoundryWall(5,5,5, glm::vec3(Position.x - 1, Position.y + 35, Position.z + 13), glm::quat()); 
+		shared_ptr<PhysicsController> button2 = CreateBoundryWall(5,5,5, glm::vec3(Position.x -1, Position.y + 10, Position.z + 16), glm::quat()); 
+		shared_ptr<PhysicsController> button3 = CreateBoundryWall(5,5,5, glm::vec3(Position.x - 1, Position.y - 5, Position.z + 18), glm::quat());
+
+		Nose->rigidBody->setGravity(btVector3(0,0,0));
+	}
+}
+//************************************************************************************************************************************
+// The same thing is done here as with the snowman. It akes in its position and the amount, then loops around each one being created.
+// It creates all the body part and sets them all to zero.
+// Each shape being created takes in an extra parameter which is the colour you want it to be. 
+// Then the last thing is the joints for each body part is constructed making all the body parts tramsform into a rag doll.
+//************************************************************************************************************************************
+void PhysicsFactory::CreateRagDoll(glm::vec3 Position, float Amount)
+{
+	for(int i = 0; i < Amount; i++)
+	{
+		if(i > 0)
+		{
+			Position.x = Position.x + 20;
+		}
+		shared_ptr<PhysicsController> Head = CreateSphere(2.5f, glm::vec3(Position.x, Position.y + 15, Position.z),glm::quat(), glm::vec3(1,0.8f,0.8f));
+		shared_ptr<PhysicsController> Body = CreateBox(8,20,2, Position, glm::quat(), glm::vec3(0,0,1));
+		shared_ptr<PhysicsController> ArmLeftUpper = CreateBox(2,6,2, glm::vec3(Position.x -7, Position.y + 7, Position.z), glm::quat(), glm::vec3(0,0,1));
+		shared_ptr<PhysicsController> ArmLeftLower = CreateBox(2,6,2, glm::vec3(Position.x - 7, Position.y, Position.z), glm::quat(), glm::vec3(1,0.8f,0.8f));
+		shared_ptr<PhysicsController> ArmRightUpper = CreateBox(2,6,2, glm::vec3(Position.x + 6, Position.y + 7, Position.z), glm::quat(), glm::vec3(0,0,1));
+		shared_ptr<PhysicsController> ArmRightLower = CreateBox(2,6,2, glm::vec3(Position.x + 6, Position.y, Position.z), glm::quat(), glm::vec3(1,0.8f,0.8f));
+		shared_ptr<PhysicsController> LegLeftUpper = CreateBox(2,6,2, glm::vec3(Position.x - 2, Position.y - 13, Position.z), glm::quat(), glm::vec3(1,0.5f,0));
+		shared_ptr<PhysicsController> LegLeftLower = CreateBox(2,6,2, glm::vec3(Position.x - 2, Position.y - 20, Position.z), glm::quat(), glm::vec3(1,0.8f,0.8f));
+		shared_ptr<PhysicsController> LegRightUpper = CreateBox(2,6,2, glm::vec3(Position.x + 2, Position.y - 13, Position.z), glm::quat(), glm::vec3(1,0.5f,0));
+		shared_ptr<PhysicsController> LegRightLower = CreateBox(2,6,2, glm::vec3(Position.x + 2, Position.y - 20, Position.z), glm::quat(), glm::vec3(1,0.8f,0.8f));
+
+		Head->rigidBody->setGravity(btVector3(0,0,0));
+		Body->rigidBody->setGravity(btVector3(0,0,0));
+		ArmLeftUpper->rigidBody->setGravity(btVector3(0,0,0));
+		ArmLeftLower->rigidBody->setGravity(btVector3(0,0,0));
+		ArmRightUpper->rigidBody->setGravity(btVector3(0,0,0));
+		ArmRightLower->rigidBody->setGravity(btVector3(0,0,0));
+		LegLeftUpper->rigidBody->setGravity(btVector3(0,0,0));
+		LegLeftLower->rigidBody->setGravity(btVector3(0,0,0));
+		LegRightUpper->rigidBody->setGravity(btVector3(0,0,0));
+		LegRightLower->rigidBody->setGravity(btVector3(0,0,0));
+
+		btPoint2PointConstraint * Neck = new btPoint2PointConstraint(*Head->rigidBody, *Body->rigidBody, btVector3(0,-2.5f,0),btVector3(0,11,0));
+		dynamicsWorld->addConstraint(Neck);
+
+		btPoint2PointConstraint * LeftShouler = new btPoint2PointConstraint(*Body->rigidBody, *ArmLeftUpper->rigidBody, btVector3(-5,9.5f,0),btVector3(1,4,0));
+		dynamicsWorld->addConstraint(LeftShouler);
+
+		btPoint2PointConstraint * RightShoulder = new btPoint2PointConstraint(*Body->rigidBody, *ArmRightUpper->rigidBody, btVector3(5,9.5f,0),btVector3(-1,4,0));
+		dynamicsWorld->addConstraint(RightShoulder);
+
+		btHingeConstraint * LeftElbow = new btHingeConstraint(*ArmLeftUpper->rigidBody, *ArmLeftLower->rigidBody, btVector3(0,-3.1f,0),btVector3(0,3.1f,0), btVector3(1,0,0), btVector3(1,0,0), true);
+		dynamicsWorld->addConstraint(LeftElbow);
+
+		btHingeConstraint * RightElbow = new btHingeConstraint(*ArmRightUpper->rigidBody, *ArmRightLower->rigidBody, btVector3(0,-3.1f,0),btVector3(0,3.1f,0), btVector3(1,0,0), btVector3(1,0,0), true);
+		dynamicsWorld->addConstraint(RightElbow);
+
+		btPoint2PointConstraint * LeftHip = new btPoint2PointConstraint(*Body->rigidBody, *LegLeftUpper->rigidBody, btVector3(-2.5f,-8,1),btVector3(0,6,0));
+		dynamicsWorld->addConstraint(LeftHip);
+
+		btPoint2PointConstraint * RightHip = new btPoint2PointConstraint(*Body->rigidBody, *LegRightUpper->rigidBody, btVector3(2.5f,-8,0),btVector3(0,6,0));
+		dynamicsWorld->addConstraint(RightHip);
+
+		btHingeConstraint * LeftKnee = new btHingeConstraint(*LegLeftUpper->rigidBody, *LegLeftLower->rigidBody, btVector3(0,-3.1f,0),btVector3(0,3.1f,0), btVector3(1,0,0), btVector3(1,0,0), true);
+		dynamicsWorld->addConstraint(LeftKnee);
+
+		btHingeConstraint * RightKnee = new btHingeConstraint(*LegRightUpper->rigidBody, *LegRightLower->rigidBody, btVector3(0,-3.1f,0),btVector3(0,3.1,0), btVector3(1,0,0), btVector3(1,0,0), true);
+		dynamicsWorld->addConstraint(RightKnee);
+	}
+}
+//************************************************************************************************************************************
+// This function is where I create my christmas tree. 
+// It takes in the amount of blocks you want for its width and the same for its height. 
+// It then loops around the height first so it can lay the bottom bricks. Inside the height loop it does the width for loop that
+// places each block. If h == 0 which means its on the first row of blocks so it lays the whole width wide. 
+// Then for each other row moving up it takes 2 blocks away from the width so that it gets smaller each row. 
+// The last position of the last block placed is recored and stored inside a vector so it can be used to place a sphere on top of the
+// tree.
+//************************************************************************************************************************************
+void PhysicsFactory::CreateChristmasTree(glm::vec3 startAt, float width, float height, float blockWidth, float blockHeight, float blockDepth)
+{
+	float x = startAt.x;
+	glm::vec3 topPosition;
+	glm::vec3 UpPosition;
+	//int i = 0;
+	int Indent = 1;
+	for(int h = 0; h < height; h++)
+	{
+		for(int w = 0; w < width; w++)
+		{
+			if(h == 0)
+			{
+				float z = startAt.z - ((blockWidth) * w);
+				float y = ((blockHeight) / 2.0f) + ((blockHeight) * (h));
+				CreateBox(blockWidth, blockHeight, blockDepth, glm::vec3(x,y,z), glm::quat(), glm::vec3(0.5f,1,0.5f));
+			}
+			else
+			{
+				if(w == 0)
+				{
+					float z = (startAt.z - blockWidth * Indent);
+					float y = ((blockHeight) / 2.0f) + ((blockHeight) * (h));
+					CreateBox(blockWidth, blockHeight, blockDepth, glm::vec3(x, y, z), glm::quat(), glm::vec3(0.5f,1,0.5f));
+					Indent += 1;
+					UpPosition = glm::vec3(x,y,z); // To be used for the sphere(star)
+				}
+				else
+				{
+					float z = (UpPosition.z) - ((blockWidth) * w);
+					float y = ((blockHeight) / 2.0f) + ((blockHeight) * (h));
+					CreateBox(blockWidth, blockHeight, blockDepth, glm::vec3(x, y, z), glm::quat(), glm::vec3(0.5f,1,0.5f));
+					topPosition = glm::vec3(x,y,z); // To be used for the sphere(star)
+				}	
+			}
+		}
+		//i = 2;
+		width = width - 2; // Taking away 2 blocks each time
+	}
+	CreateSphere(4,glm::vec3(topPosition.x, topPosition.y + (blockHeight/2), topPosition.z + (blockWidth/1.2f)), glm::quat(), glm::vec3(0.1f,1,0.1f));
+}
+//************************************************************************************************************************************
+// In here the ramp for the ball to roll down is created. 
+//************************************************************************************************************************************
+void PhysicsFactory::CreateRamp(glm::vec3 startAt, float width, float height, float blockWidth, float blockHeight, float blockDepth)
+{
+	float x = startAt.x;
+	float gap = 0;
+
+	for (int w = 0 ; w < width ; w ++)
+	{
+		for (int h = 0 ; h < height ; h ++)	
+		{
+			glm::quat RampRotation = glm::angleAxis(60.0f ,glm::vec3(1,0,0)); // Rotating the axis of the ramp
+			float z = startAt.z + ((blockWidth + 30.0f) * w);
+			float y = ((blockHeight + gap) / 2.0f) + ((blockHeight + gap) * h);
+			CreateBox(blockWidth, blockHeight, blockDepth, glm::vec3(x, y, z), RampRotation, glm::vec3(1,1,1)); // Creating the ramp with the new rotation degrees
+		}
+	}
+}
+//************************************************************************************************************************************
+// Creating the seesaw that is palced at the end of my dominos. 
+//************************************************************************************************************************************
+void PhysicsFactory::CreateSeeSaw(glm::vec3 startAt, float width, float height, float blockWidth, float blockHeight, float blockDepth)
+{
+	float z = startAt.z;
+	float gap = 0;
+
+	for (int w = 0 ; w < width ; w ++)
+	{
+		for (int h = 0 ; h < height ; h ++)	
+		{
+			glm::quat SeeSawRotation = glm::angleAxis(70.0f ,glm::vec3(0,0,1)); // Again rotating the axis of the timber to be placed on the cylinder
+			float x = startAt.x + ((blockWidth + 30.0f) * w);
+			float y = startAt.y;
+			CreateBox(blockWidth, blockHeight, blockDepth, glm::vec3(x, y, z), SeeSawRotation, glm::vec3(1,1,1));
+		}
+	}
+}
+//************************************************************************************************************************************
+// Here I am creating my dominos stack. 
+// The width that the user enters in will determine the amount of dominos created
+//************************************************************************************************************************************
+
+void PhysicsFactory::CreateDomino2(glm::vec3 startAt, float width, float height, float blockWidth, float blockHeight, float blockDepth)
+{
+	float x = startAt.x;
+
+	for (int w = 0 ; w < width ; w ++)
+	{
+		for (int h = 0 ; h < height ; h ++)	
+		{
+			float z = startAt.z + ((blockWidth + 20.0f) * w);
+			float y = startAt.y;
+			CreateBox(blockWidth, blockHeight, blockDepth, glm::vec3(x, y, z), glm::quat(), glm::vec3(239,208,207));
+		}
+	}
+}
+//************************************************************************************************************************************
+// This is just creating my flat platform that my sphere will be placed on that will roll down and start the domino effect
+//************************************************************************************************************************************
+void PhysicsFactory::CreateRoof(glm::vec3 startAt, float width, float height, float blockWidth, float blockHeight, float blockDepth)
+{
+	float z = startAt.z;
+	float gap = 0;
+
+	for (int w = 0 ; w < width ; w ++)
+	{
+		for (int h = 0 ; h < height ; h ++)	
+		{
+			float x = startAt.x + ((blockWidth) * w);
+			float y = ((blockHeight + gap) / 2.0f) + ((blockHeight + gap) * h) + 18;
+			CreateBox(blockWidth, blockHeight, blockDepth, glm::vec3(x, y, z), glm::quat(), glm::vec3(1,1,1));
+		}
+	}
+}
+//************************************************************************************************************************************
+//************************************************************************************************************************************
 void PhysicsFactory::CreateWall(glm::vec3 startAt, float width, float height, float blockWidth, float blockHeight, float blockDepth)
 {
 	float z = startAt.z;
-	float gap = 1;
+	float gap = 0;
 
 	for (int w = 0 ; w < width ; w ++)
 	{
@@ -32,11 +269,30 @@ void PhysicsFactory::CreateWall(glm::vec3 startAt, float width, float height, fl
 		{
 			float x = startAt.x + ((blockWidth + 2) * w);
 			float y = ((blockHeight + gap) / 2.0f) + ((blockHeight + gap) * h);
-			CreateBox(blockWidth, blockHeight, blockDepth, glm::vec3(x, y, z), glm::quat());
+			CreateBox(blockWidth, blockHeight, blockDepth, glm::vec3(x, y, z), glm::quat(), glm::vec3(1,1,1));
 		}
 	}
 }
+//************************************************************************************************************************************
+//************************************************************************************************************************************
+//Width going along Z Axis
+void PhysicsFactory::CreateSecondWall(glm::vec3 startAt, float width, float height, float blockWidth, float blockHeight, float blockDepth)
+{
+	float x = startAt.x;
+	float gap = 0;
 
+	for (int w = 0 ; w < width ; w ++)
+	{
+		for (int h = 0 ; h < height ; h ++)	
+		{
+			float z = startAt.z + ((blockWidth + 2) * w);
+			float y = ((blockHeight + gap) / 2.0f) + ((blockHeight + gap) * h);
+			CreateBox(blockWidth, blockHeight, blockDepth, glm::vec3(x, y, z), glm::quat(), glm::vec3(1,1,1));
+		}
+	}
+}
+//************************************************************************************************************************************
+//************************************************************************************************************************************
 shared_ptr<PhysicsController> PhysicsFactory::CreateFromModel(string name, glm::vec3 pos, glm::quat quat, glm::vec3 scale)
 {
 	shared_ptr<GameComponent> component = make_shared<GameComponent>();
@@ -77,16 +333,19 @@ shared_ptr<PhysicsController> PhysicsFactory::CreateFromModel(string name, glm::
 	controller->tag = "Model";	
 	return controller;
 }
-
-shared_ptr<PhysicsController> PhysicsFactory::CreateSphere(float radius, glm::vec3 pos, glm::quat quat)
+//************************************************************************************************************************************
+// What I changed here is to add an extra parameter to be taken in and that is the colour. 
+// The rgb value is taken in and is applied ot the shape
+//************************************************************************************************************************************
+shared_ptr<PhysicsController> PhysicsFactory::CreateSphere(float radius, glm::vec3 pos, glm::quat quat, glm::vec3 Color)
 {
 	shared_ptr<GameComponent> sphere (new Sphere(radius));
 	Game::Instance()->Attach(sphere);
-
+	sphere->diffuse = Color; // Colour applied here.
 	btDefaultMotionState * sphereMotionState = new btDefaultMotionState(btTransform(GLToBtQuat(quat)
 		,GLToBtVector(pos)));	
 
-	btScalar mass = 1;
+	btScalar mass = 2;
 	btVector3 sphereInertia(0,0,0);
 	btCollisionShape * sphereShape = new btSphereShape(radius);
 
@@ -102,9 +361,10 @@ shared_ptr<PhysicsController> PhysicsFactory::CreateSphere(float radius, glm::ve
 	sphereController->tag = "Sphere";	
 	return sphereController;
 }
-
-
-shared_ptr<PhysicsController> PhysicsFactory::CreateBox(float width, float height, float depth, glm::vec3 pos, glm::quat quat)
+//************************************************************************************************************************************
+// Again an extra parameter for colour added in
+//************************************************************************************************************************************
+shared_ptr<PhysicsController> PhysicsFactory::CreateBox(float width, float height, float depth, glm::vec3 pos, glm::quat quat, glm::vec3 color)
 {
 	// Create the shape
 	btCollisionShape * boxShape = new btBoxShape(btVector3(width, height, depth) * 0.5);
@@ -114,6 +374,7 @@ shared_ptr<PhysicsController> PhysicsFactory::CreateBox(float width, float heigh
 
 	// This is a container for the box model
 	shared_ptr<Box> box = make_shared<Box>(width, height, depth);
+	box->diffuse = color;
 	box->worldMode = GameComponent::from_child;
 	box->position = pos;
 	Game::Instance()->Attach(box);
@@ -135,8 +396,10 @@ shared_ptr<PhysicsController> PhysicsFactory::CreateBox(float width, float heigh
 
 	return boxController;
 }
-
-shared_ptr<PhysicsController> PhysicsFactory::CreateCylinder(float radius, float height, glm::vec3 pos, glm::quat quat)
+//************************************************************************************************************************************
+// Again an extra parameter for colour added in
+//************************************************************************************************************************************
+shared_ptr<PhysicsController> PhysicsFactory::CreateCylinder(float radius, float height, glm::vec3 pos, glm::quat quat, glm::vec3 color)
 {
 	// Create the shape
 	btCollisionShape * shape = new btCylinderShape(btVector3(radius, height * 0.5f, radius));
@@ -147,6 +410,7 @@ shared_ptr<PhysicsController> PhysicsFactory::CreateCylinder(float radius, float
 	// This is a container for the box model
 	shared_ptr<GameComponent> cyl = make_shared<GameComponent>(Cylinder(radius, height));
 	cyl->position = pos;
+	cyl->diffuse = color;
 	Game::Instance()->Attach(cyl);
 
 	// Create the rigid body
@@ -165,7 +429,8 @@ shared_ptr<PhysicsController> PhysicsFactory::CreateCylinder(float radius, float
 
 	return component;
 }
-
+//************************************************************************************************************************************
+//************************************************************************************************************************************
 shared_ptr<PhysicsController> PhysicsFactory::CreateCameraPhysics()
 {
 	btVector3 inertia;
@@ -186,7 +451,71 @@ shared_ptr<PhysicsController> PhysicsFactory::CreateCameraPhysics()
 	dynamicsWorld->addRigidBody(body);
 	return physicsCamera;
 }
+//************************************************************************************************************************************
+// Created this Kinematic boundry wall
+//************************************************************************************************************************************
+shared_ptr<PhysicsController> PhysicsFactory::CreateBoundryWall(float width, float height, float depth, glm::vec3 pos, glm::quat quat)
+{
+	// Create the shape
+	btCollisionShape * boxShape = new btBoxShape(btVector3(width, height, depth) * 0.5);
+	btScalar mass = 1;
+	btVector3 boxInertia(0,0,0);
+	
+	boxShape->calculateLocalInertia(mass,boxInertia);
 
+	// This is a container for the box model
+	shared_ptr<Box> box = make_shared<Box>(width, height, depth);
+	box->diffuse = glm::vec3(0,0,0);
+	box->worldMode = GameComponent::from_child;
+	box->position = pos;
+	Game::Instance()->Attach(box);
+
+	// Create the rigid body
+	btDefaultMotionState * boxMotionState = new btDefaultMotionState(btTransform(GLToBtQuat(quat)
+		,GLToBtVector(pos)));			
+	btRigidBody::btRigidBodyConstructionInfo fallRigidBodyCI(mass,  boxMotionState, boxShape, boxInertia);
+	btRigidBody * body = new btRigidBody(fallRigidBodyCI);
+	body->setFriction(567);
+	dynamicsWorld->addRigidBody(body);
+
+	// Create the physics component and add it to the box
+	shared_ptr<PhysicsController> boxController = make_shared<PhysicsController>(PhysicsController(boxShape, body, boxMotionState));
+	boxController->tag = "Box";
+	body->setUserPointer(boxController.get());
+	body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
+	box->Attach(boxController);
+
+	return boxController;
+}
+//************************************************************************************************************************************
+// Created kinematic spheres for the snowmans body
+//************************************************************************************************************************************
+shared_ptr<PhysicsController> PhysicsFactory::Snowman(float radius, glm::vec3 pos, glm::quat quat, glm::vec3 Color)
+{
+	shared_ptr<GameComponent> sphere (new Sphere(radius));
+	Game::Instance()->Attach(sphere);
+	sphere->diffuse = Color;
+	btDefaultMotionState * sphereMotionState = new btDefaultMotionState(btTransform(GLToBtQuat(quat)
+		,GLToBtVector(pos)));	
+
+	btScalar mass = 5;
+	btVector3 sphereInertia(0,0,0);
+	btCollisionShape * sphereShape = new btSphereShape(radius);
+
+	sphereShape->calculateLocalInertia(mass,sphereInertia);
+	btRigidBody::btRigidBodyConstructionInfo fallRigidBodyCI(mass,sphereMotionState, sphereShape, sphereInertia);
+	btRigidBody * body = new btRigidBody(fallRigidBodyCI);
+	body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
+	dynamicsWorld->addRigidBody(body);
+
+	shared_ptr<PhysicsController> sphereController (new PhysicsController(sphereShape, body, sphereMotionState));	
+	body->setUserPointer(sphereController.get());
+	sphere->Attach(sphereController);
+	sphereController->tag = "Sphere";	
+	return sphereController;
+}
+//************************************************************************************************************************************
+//************************************************************************************************************************************
 shared_ptr<PhysicsController> PhysicsFactory::CreateVehicle(glm::vec3 position)
 {
 	float width = 15;
@@ -195,38 +524,51 @@ shared_ptr<PhysicsController> PhysicsFactory::CreateVehicle(glm::vec3 position)
 	float wheelWidth = 1;
 	float wheelRadius = 2;
 	float wheelOffset = 2.0f;
-
-	shared_ptr<PhysicsController> chassis = CreateBox(width, height, length, position, glm::quat());
-
+	glm::vec3 colour;
+	shared_ptr<PhysicsController> chassis = CreateBox(width, height, length, position, glm::quat(), glm::vec3(1,1,1));
+	shared_ptr<PhysicsController> hub; 
+	shared_ptr<PhysicsController> chimney; 
+	
 	shared_ptr<PhysicsController> wheel;
 	glm::quat q =  glm::angleAxis(glm::half_pi<float>(), glm::vec3(1, 0, 0));
 
 	glm::vec3 offset;
 	btHingeConstraint * hinge;
 
+	offset = glm::vec3(-3.75f, 5, 0);
+	chimney = CreateBox(3, 6, 3, glm::vec3(position.x + (width/4),position.y + 50,position.z), q, glm::vec3(1,1,1));
+	hinge = new btHingeConstraint(* chassis->rigidBody, * chimney->rigidBody, GLToBtVector(offset),btVector3(0,0,0), btVector3(0,0,1), btVector3(0,1,0), true);
+	dynamicsWorld->addConstraint(hinge);
+
+	offset = glm::vec3(3.75f, 5, 0);
+	hub = CreateBox(7.5f, 7, length, glm::vec3(position.x + (width/4),position.y + 50,position.z), glm::quat(), glm::vec3(1,1,1));
+	hinge = new btHingeConstraint(* chassis->rigidBody, * hub->rigidBody, GLToBtVector(offset),btVector3(0,0,0), btVector3(0,0,1), btVector3(0,1,0), true);
+	dynamicsWorld->addConstraint(hinge);
+
 	offset = glm::vec3(- (width / 2 - wheelRadius), 0, - (length / 2 + wheelOffset));
-	wheel = CreateCylinder(wheelRadius, wheelWidth, position + offset, q);	 
-	hinge = new btHingeConstraint(* chassis->rigidBody, * wheel->rigidBody, GLToBtVector(offset),btVector3(0,0, 0), btVector3(0,0,1), btVector3(0,1,0), true);
+	wheel = CreateCylinder(wheelRadius, wheelWidth, position + offset, q, glm::vec3(1,0.8f,0.8f));	 
+	hinge = new btHingeConstraint(* chassis->rigidBody, * wheel->rigidBody, GLToBtVector(offset),btVector3(0,0,0), btVector3(0,0,1), btVector3(0,1,0), true);
 	dynamicsWorld->addConstraint(hinge);
 
 	offset = glm::vec3(+ (width / 2 - wheelRadius), 0, - (length / 2 + wheelOffset));
-	wheel = CreateCylinder(wheelRadius, wheelWidth, glm::vec3(position.x + (width / 2) - wheelRadius, position.y, position.z - (length / 2) - wheelWidth), q);
+	wheel = CreateCylinder(wheelRadius, wheelWidth, glm::vec3(position.x + (width / 2) - wheelRadius, position.y, position.z - (length / 2) - wheelWidth), q, glm::vec3(1,0.8f,0.8f));
 	hinge = new btHingeConstraint(* chassis->rigidBody, * wheel->rigidBody, GLToBtVector(offset),btVector3(0,0, 0), btVector3(0,0,1), btVector3(0,1,0), true);
 	dynamicsWorld->addConstraint(hinge);
 
 	offset = glm::vec3(- (width / 2 - wheelRadius), 0, + (length / 2 + wheelOffset));
-	wheel = CreateCylinder(wheelRadius, wheelWidth, position + offset, q);	 
+	wheel = CreateCylinder(wheelRadius, wheelWidth, position + offset, q, glm::vec3(1,0.8f,0.8f));	 
 	hinge = new btHingeConstraint(* chassis->rigidBody, * wheel->rigidBody, GLToBtVector(offset),btVector3(0,0, 0), btVector3(0,0,1), btVector3(0,1,0), true);
 	dynamicsWorld->addConstraint(hinge);
 
 	offset = glm::vec3(+ (width / 2 - wheelRadius), 0, + (length / 2 + wheelOffset));
-	wheel = CreateCylinder(wheelRadius, wheelWidth, position + offset, q);	 
+	wheel = CreateCylinder(wheelRadius, wheelWidth, position + offset, q, glm::vec3(1,0.8f,0.8f));	 
 	hinge = new btHingeConstraint(* chassis->rigidBody, * wheel->rigidBody, GLToBtVector(offset),btVector3(0,0, 0), btVector3(0,0,1), btVector3(0,1,0), true);
 	dynamicsWorld->addConstraint(hinge);
 
 	return chassis;
 }
-
+//************************************************************************************************************************************
+//************************************************************************************************************************************
 shared_ptr<PhysicsController> PhysicsFactory::CreateGroundPhysics()
 {
 	shared_ptr<Ground> ground = make_shared<Ground>();
@@ -246,7 +588,8 @@ shared_ptr<PhysicsController> PhysicsFactory::CreateGroundPhysics()
 	Game::Instance()->SetGround(ground);
 	return groundComponent;
 }
-
+//************************************************************************************************************************************
+//************************************************************************************************************************************
 shared_ptr<PhysicsController> PhysicsFactory::CreateRandomObject(glm::vec3 point, glm::quat q)
 {
 	vector<string> names;

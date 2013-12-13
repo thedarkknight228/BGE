@@ -10,7 +10,7 @@ Box::Box(float width, float height, float depth):GameComponent()
 	shared_ptr<Model> model = Content::LoadModel("cube");
 	model->drawMode = Model::draw_modes::single_material;
 	model->Initialise();
-	diffuse = glm::vec3(RandomFloat(),RandomFloat(),RandomFloat());
+	diffuse = glm::vec3(1,1,1);
 	specular = glm::vec3(0,0,0);
 	tag = "Box";
 	Attach(model);

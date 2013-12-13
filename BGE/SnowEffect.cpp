@@ -28,17 +28,15 @@ bool SnowEffect::Initialise()
 void SnowEffect::InitParticle(Particle & p)
 {
 	float range = 1000.0f;
-	float radius = 0.1f;
-	// Give the particle a random X and Z, but fixed Y
+	float radius = 10.0f;
 	p.position = glm::vec3(RandomClamped(-range, range), range, RandomClamped(-range, range));
-	// Give the particle a random down velocity
+
 	p.velocity = glm::vec3(RandomClamped(-radius, radius), RandomClamped(- radius, -radius * 5.0f), RandomClamped(-radius, radius));
-	
-	// White colour
 	p.diffuse = glm::vec4(1,1,1,1);
 	p.age = 0;
 	p.alive = true;
-	p.size = RandomClamped(500, 600);
+	p.size = RandomClamped(10, 20);
+	p.lifetime = 10.0f;
 }
 
 void SnowEffect::UpdateParticle(float timeDelta, Particle & p)

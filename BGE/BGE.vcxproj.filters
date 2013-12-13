@@ -24,6 +24,9 @@
     <Filter Include="Controllers">
       <UniqueIdentifier>{b8283cc0-8725-4a13-a2c1-fc02e47c494e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="OVRKill">
+      <UniqueIdentifier>{d4fdf9a6-dec9-41c6-a284-39e14bda0d61}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Scenarios">
       <UniqueIdentifier>{82919e9f-6727-4dac-9428-1308d1d5e346}</UniqueIdentifier>
     </Filter>
@@ -36,8 +39,8 @@
     <Filter Include="Labs">
       <UniqueIdentifier>{f09f20fd-b65f-4670-9e98-ec489fae4c53}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Labs\OVRKill">
-      <UniqueIdentifier>{d4fdf9a6-dec9-41c6-a284-39e14bda0d61}</UniqueIdentifier>
+    <Filter Include="Assignment">
+      <UniqueIdentifier>{c9f19da0-9e4a-4459-954e-7cf5ae60e136}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -108,10 +111,10 @@
       <Filter>Controllers</Filter>
     </ClCompile>
     <ClCompile Include="FBO.cpp">
-      <Filter>Labs\OVRKill</Filter>
+      <Filter>OVRKill</Filter>
     </ClCompile>
     <ClCompile Include="ShaderFunctions.cpp">
-      <Filter>Labs\OVRKill</Filter>
+      <Filter>OVRKill</Filter>
     </ClCompile>
     <ClCompile Include="RiftController.cpp">
       <Filter>Controllers</Filter>
@@ -203,11 +206,8 @@
     <ClCompile Include="Lab8.cpp">
       <Filter>Labs</Filter>
     </ClCompile>
-    <ClCompile Include="Person.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="VRGame.cpp">
-      <Filter>Games</Filter>
+    <ClCompile Include="WinterWonderland.cpp">
+      <Filter>Assignment</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -275,13 +275,13 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="OVR_Shaders.h">
-      <Filter>Labs\OVRKill</Filter>
+      <Filter>OVRKill</Filter>
     </ClInclude>
     <ClInclude Include="FBO.h">
-      <Filter>Labs\OVRKill</Filter>
+      <Filter>OVRKill</Filter>
     </ClInclude>
     <ClInclude Include="ShaderFunctions.h">
-      <Filter>Labs\OVRKill</Filter>
+      <Filter>OVRKill</Filter>
     </ClInclude>
     <ClInclude Include="RiftController.h">
       <Filter>Controllers</Filter>
@@ -376,11 +376,8 @@
     <ClInclude Include="Lab8.h">
       <Filter>Labs</Filter>
     </ClInclude>
-    <ClInclude Include="Person.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="VRGame.h">
-      <Filter>Games</Filter>
+    <ClInclude Include="WinterWonderland.h">
+      <Filter>Assignment</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -457,6 +454,5 @@
     <None Include="Content\Particles.vertexshader">
       <Filter>Content</Filter>
     </None>
-    <None Include="Particles.cd" />
   </ItemGroup>
 </Project>

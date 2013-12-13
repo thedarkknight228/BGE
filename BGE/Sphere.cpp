@@ -9,7 +9,7 @@ Sphere::Sphere(float radius)
 	std::shared_ptr<GameComponent> model (Content::LoadModel("sphere"));
 	model->drawMode = Model::draw_modes::single_material;
 	model->Initialise();
-	diffuse = glm::vec3(RandomFloat(),RandomFloat(),RandomFloat());
+	diffuse = glm::vec3(1,0,0);
 	specular = glm::vec3(1.2f,1.2f, 1.2f);
 	tag = "Sphere";
 	Attach(model);
