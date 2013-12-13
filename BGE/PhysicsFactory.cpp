@@ -21,22 +21,125 @@ PhysicsFactory::~PhysicsFactory(void)
 {
 }
 
-/*void PhysicsFactory::BowlingPins(glm::vec3 startAt, float width, float depth, float blockHeight)
+//************************************************************************************************************************************
+// Making Bowling. 
+//************************************************************************************************************************************
+void PhysicsFactory::BowlingPins(glm::vec3 startAt, float width, float depth, float blockHeight)
 {
 	float y = startAt.y;
-	float gap = 0;
+	float gap = 3;
 	float radius = 3.0f;
+	glm::vec3 UpPosition;
+	int Indent = 3;
 
-	for (int w = 0 ; w < width ; w ++)
+	/*for (int d = 0 ; d < depth ; d ++)
 	{
-		for (int h = 0 ; h < depth ; h ++)	
+		for (int w = 0 ; w < width ; w ++)	
 		{
-			float x = startAt.x + ((blockWidth + 2) * w);
-			float z = ((blockHeight + gap) / 2.0f) + ((blockHeight + gap) * h);
-			CreateCylinder(radius, blockHeight, glm::vec3(x, y, z), glm::quat(), glm::vec3(1,0.5f,0.9f));
+			if(d == 0)
+			{
+				float x = startAt.x - ((radius * 2 + gap) * w);
+				float z = (((radius * 2) + gap) / 2.0f) + (((radius * 2) + gap) * d);
+				CreateCylinder(radius, blockHeight, glm::vec3(x, y, z), glm::quat(), glm::vec3(1,0.5f,0.9f));
+			}
+			else if(d > 1)
+			{
+				if(w == 0)
+				{
+					float x = (startAt.z - (radius * 2 + gap) * Indent);
+					float z = (((radius * 2) + gap) / 2.0f) + (((radius * 2) + gap) * d);
+					CreateCylinder(radius, blockHeight, glm::vec3(x, y, z), glm::quat(), glm::vec3(1,0.5f,0.9f));
+					Indent += radius*2; // So the next row doesnt start at 0
+					UpPosition = glm::vec3(x,y,z); // To be used to reference the last placed shape
+				}
+				else if(w > 0)
+				{
+					float x = (UpPosition.x) - ((radius*2 + gap) * w);
+					float z = (((radius * 2) + gap) / 2.0f) + (((radius * 2) + gap) * d);
+					CreateCylinder(radius, blockHeight, glm::vec3(x, y, z), glm::quat(), glm::vec3(1,0.5f,0.9f));
+				}
+				//float x = startAt.x - ((radius * 2 + gap + (gap/2)) * w);
+				//float z = (((radius * 2) + gap) / 2.0f) + (((radius * 2) + gap) * d);
+				//CreateCylinder(radius, blockHeight, glm::vec3(x, y, z), glm::quat(), glm::vec3(1,0.5f,0.9f));
+			}
 		}
+		width = width - 1;
+	}*/
+
+	/*for(int q = 0; q < 10; q++)
+	{
+		float x = startAt.x + ((radius * 2 + gap) * q);
+		CreateCylinder(radius, blockHeight, glm::vec3(startAt.x,startAt.y,startAt.z), glm::quat(), glm::vec3(1,0.5f,0.9f));
 	}
-}*/
+	for(int w = 0; w < 9; w++)
+	{
+		float x = startAt.x + ((radius * 2 + gap) * w);
+		CreateCylinder(radius, blockHeight, glm::vec3(startAt.x,startAt.y,startAt.z + (radius*2 + gap)), glm::quat(), glm::vec3(1,0.5f,0.9f));
+	}
+	for(int e = 0; e < 8; e++)
+	{
+		float x = startAt.x + ((radius * 3 + gap) * e);
+		CreateCylinder(radius, blockHeight, glm::vec3(startAt.x,startAt.y,startAt.z + (radius*3 + gap)), glm::quat(), glm::vec3(1,0.5f,0.9f));
+	}
+	for(int r = 0; r < 7; r++)
+	{
+		float x = startAt.x + ((radius * 4 + gap) * r);
+		CreateCylinder(radius, blockHeight, glm::vec3(startAt.x,startAt.y,startAt.z + (radius*4 + gap)), glm::quat(), glm::vec3(1,0.5f,0.9f));
+	}
+	for(int t = 0; t < 6; t++)
+	{
+		float x = startAt.x + ((radius * 5 + gap) * t);
+		CreateCylinder(radius, blockHeight, glm::vec3(startAt.x,startAt.y,startAt.z + (radius*5 + gap)), glm::quat(), glm::vec3(1,0.5f,0.9f));
+	}
+	for(int y = 0; y < 5; y++)
+	{
+		float x = startAt.x + ((radius * 6 + gap) * y);
+		CreateCylinder(radius, blockHeight, glm::vec3(startAt.x,startAt.y,startAt.z + (radius*6 + gap)), glm::quat(), glm::vec3(1,0.5f,0.9f));
+	}
+	for(int u = 0; u < 4; u++)
+	{
+		float x = startAt.x + ((radius * 7 + gap) * u);
+		CreateCylinder(radius, blockHeight, glm::vec3(startAt.x,startAt.y,startAt.z + (radius*7 + gap)), glm::quat(), glm::vec3(1,0.5f,0.9f));
+	}
+	for(int i = 0; i < 3; i++)
+	{
+		float x = startAt.x + ((radius * 8 + gap) * i);
+		CreateCylinder(radius, blockHeight, glm::vec3(startAt.x,startAt.y,startAt.z + (radius*8 + gap)), glm::quat(), glm::vec3(1,0.5f,0.9f));
+	}
+	CreateCylinder(radius, blockHeight, glm::vec3(startAt.x,startAt.y,startAt.z + (radius*9 + gap)), glm::quat(), glm::vec3(1,0.5f,0.9f));
+	CreateCylinder(radius, blockHeight, glm::vec3(startAt.x + ((radius * 10 + gap),startAt.y,startAt.z + (radius*10 + gap)), glm::quat(), glm::vec3(1,0.5f,0.9f));*/
+
+
+	//Creating the pins manually because i only started this with an hour to go and I tried doing it in for loop above but didn't get working in time
+	CreateCylinder(radius, blockHeight, glm::vec3(startAt.x,startAt.y,startAt.z), glm::quat(), glm::vec3(1,0.5f,0.9f));
+	CreateCylinder(radius, blockHeight, glm::vec3(startAt.x + 5,startAt.y,startAt.z), glm::quat(), glm::vec3(1,0.5f,0.9f));
+	CreateCylinder(radius, blockHeight, glm::vec3(startAt.x + 10,startAt.y,startAt.z), glm::quat(), glm::vec3(1,0.5f,0.9f));
+	CreateCylinder(radius, blockHeight, glm::vec3(startAt.x + 15,startAt.y,startAt.z), glm::quat(), glm::vec3(1,0.5f,0.9f));
+	CreateCylinder(radius, blockHeight, glm::vec3(startAt.x + 20,startAt.y,startAt.z), glm::quat(), glm::vec3(1,0.5f,0.9f));
+
+	CreateCylinder(radius, blockHeight, glm::vec3(startAt.x + 4,startAt.y,startAt.z + 10), glm::quat(), glm::vec3(1,0.5f,0.9f));
+	CreateCylinder(radius, blockHeight, glm::vec3(startAt.x + 8,startAt.y,startAt.z + 10), glm::quat(), glm::vec3(1,0.5f,0.9f));
+	CreateCylinder(radius, blockHeight, glm::vec3(startAt.x + 12,startAt.y,startAt.z + 10), glm::quat(), glm::vec3(1,0.5f,0.9f));
+	CreateCylinder(radius, blockHeight, glm::vec3(startAt.x + 16,startAt.y,startAt.z + 10), glm::quat(), glm::vec3(1,0.5f,0.9f));
+
+	CreateCylinder(radius, blockHeight, glm::vec3(startAt.x + 5,startAt.y,startAt.z + 20), glm::quat(), glm::vec3(1,0.5f,0.9f));
+	CreateCylinder(radius, blockHeight, glm::vec3(startAt.x + 10,startAt.y,startAt.z + 20), glm::quat(), glm::vec3(1,0.5f,0.9f));
+	CreateCylinder(radius, blockHeight, glm::vec3(startAt.x + 15,startAt.y,startAt.z + 20), glm::quat(), glm::vec3(1,0.5f,0.9f));
+
+	CreateCylinder(radius, blockHeight, glm::vec3(startAt.x + 6.25f,startAt.y,startAt.z + 30), glm::quat(), glm::vec3(1,0.5f,0.9f));
+	CreateCylinder(radius, blockHeight, glm::vec3(startAt.x + 12.5f,startAt.y,startAt.z + 30), glm::quat(), glm::vec3(1,0.5f,0.9f));
+
+	CreateCylinder(radius, blockHeight, glm::vec3(startAt.x + 10,startAt.y,startAt.z + 40), glm::quat(), glm::vec3(1,0.5f,0.9f));
+
+	// Creating the boundry walls
+	CreateBoundryWall(10, 100, 300, glm::vec3(550,0,0), glm::quat());
+	CreateBoundryWall(10, 100, 300, glm::vec3(700,0,0), glm::quat());
+	CreateBoundryWall(155, 100, 10, glm::vec3(622,0,-150), glm::quat());
+
+	// Creating the bowling ball and stick to hit the ball with
+	CreateSphere(5, glm::vec3(605, 0, 200), glm::quat(), glm::vec3(1,0,0));
+	CreateCylinder(3, 100, glm::vec3(650,0,300), glm::angleAxis(90.0f ,glm::vec3(1,0,0)), glm::vec3(0,0,1));
+}
 
 //************************************************************************************************************************************
 // This function takes in 2 parameters the position of the first snowman and then the amount of them that you require.
@@ -164,8 +267,8 @@ void PhysicsFactory::CreateChristmasTree(glm::vec3 startAt, float width, float h
 					float z = (startAt.z - blockWidth * Indent);
 					float y = ((blockHeight) / 2.0f) + ((blockHeight) * (h));
 					CreateBox(blockWidth, blockHeight, blockDepth, glm::vec3(x, y, z), glm::quat(), glm::vec3(0.5f,1,0.5f));
-					Indent += 1;
-					UpPosition = glm::vec3(x,y,z); // To be used for the sphere(star)
+					Indent += 1; // So the next row doesnt start at 0
+					UpPosition = glm::vec3(x,y,z);
 				}
 				else
 				{
@@ -179,7 +282,7 @@ void PhysicsFactory::CreateChristmasTree(glm::vec3 startAt, float width, float h
 		//i = 2;
 		width = width - 2; // Taking away 2 blocks each time
 	}
-	CreateSphere(4,glm::vec3(topPosition.x, topPosition.y + (blockHeight/2), topPosition.z + (blockWidth/1.2f)), glm::quat(), glm::vec3(0.1f,1,0.1f));
+	CreateSphere(4,glm::vec3(topPosition.x, topPosition.y + (blockHeight/2), topPosition.z + (blockWidth/1.2f)), glm::quat(), glm::vec3(1.0f,1.0f,0));
 }
 //************************************************************************************************************************************
 // In here the ramp for the ball to roll down is created. 
@@ -465,7 +568,7 @@ shared_ptr<PhysicsController> PhysicsFactory::CreateBoundryWall(float width, flo
 
 	// This is a container for the box model
 	shared_ptr<Box> box = make_shared<Box>(width, height, depth);
-	box->diffuse = glm::vec3(0,0,0);
+	box->diffuse = glm::vec3(0,1,0);
 	box->worldMode = GameComponent::from_child;
 	box->position = pos;
 	Game::Instance()->Attach(box);

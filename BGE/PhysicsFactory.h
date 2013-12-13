@@ -26,7 +26,7 @@ namespace BGE
 		shared_ptr<PhysicsController> CreateGroundPhysics();
 		shared_ptr<PhysicsController> CreateFromModel(string name, glm::vec3 pos, glm::quat quat, glm::vec3 scale = glm::vec3(1));
 
-		//void BowlingPins(glm::vec3 startAt, float width, float depth, float blockHeight);
+		void BowlingPins(glm::vec3 startAt, float width, float depth, float blockHeight);
 		
 		void CreateSnowman(glm::vec3 Position, float Amount);
 		void CreateRagDoll(glm::vec3 Position, float Amount);
